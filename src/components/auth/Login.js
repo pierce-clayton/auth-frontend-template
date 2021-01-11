@@ -1,27 +1,25 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
-export default class Registration extends Component {
+export default class Login extends Component {
   state = {
     email: '',
     password: '',
-    password_confirmation: '',
     registrationError: ''
   }
 
   handleSubmit = (event) => {
-    const { email, password, password_confirmation } = this.state
+    const { email, password } = this.state
     event.preventDefault()
-    axios.post('http://localhost:3001/registrations', {
+    axios.post('http://localhost:3001/sessions', {
       user: {
         email: email,
-        password: password,
-        password_confirmation: password_confirmation
+        password: password
       }
     }, {
       withCredentials: true
     }).then(response => {
-      if (response.data.status === 'created'){
+      if (response.data.logged_in){
         this.props.handleSuccessfulAuth(response.data)
       }
     }).catch(error => {
@@ -41,8 +39,7 @@ export default class Registration extends Component {
         <form onSubmit={this.handleSubmit}>
           <input type="email" name="email" placeholder='Email' value={this.state.email} onChange={this.handleChange} required />
           <input type="password" name="password" placeholder='Password' value={this.state.password} onChange={this.handleChange} required />
-          <input type="password" name="password_confirmation" placeholder='Confirm Password' value={this.state.password_confirmation} onChange={this.handleChange} required />
-          <button type="submit">Register</button>
+          <button type="submit">Login</button>
         </form>
       </div>
     )
